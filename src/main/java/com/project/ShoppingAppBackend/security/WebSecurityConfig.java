@@ -1,6 +1,5 @@
 package com.project.ShoppingAppBackend.security;
 
-
 import com.project.ShoppingAppBackend.security.jwt.AuthEntryPointJwt;
 import com.project.ShoppingAppBackend.security.jwt.AuthTokenFilter;
 import com.project.ShoppingAppBackend.security.service.UserDetailsServiceImpl;
@@ -26,72 +25,75 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+  @Autowired private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
+  @Autowired private AuthEntryPointJwt unauthorizedHandler;
 
-    @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
-    }
-    @Autowired
-    private AuthEntryPointJwt authEntryPointJwt;
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+  @Bean
+  public AuthTokenFilter authenticationJwtTokenFilter() {
+    return new AuthTokenFilter();
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
+  @Autowired private AuthEntryPointJwt authEntryPointJwt;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        //configuration.setAllowedOrigins(Arrays.asList("https://styleswype.shop/" , "https://www.styleswype.shop/")); // Ajusta según sea necesario
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // Usa tu configuración CORS personalizada
-                .csrf(csrf -> csrf.disable()) // Deshabilita CSRF; asegúrate de entender las implicaciones de seguridad de esta configuración
-                .authorizeHttpRequests(auth ->  // Configura autorizaciones basadas en roles
-                        auth
-                                .requestMatchers("/api/auth/admin/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/api/auth/user/**").hasAuthority("ROLE_USER")
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .authenticationProvider(authenticationProvider())  // Configura tu proveedor de autenticación personalizado
-                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)  // Agrega tu filtro JWT personalizado
-                .requiresChannel(channel ->  // Configura la redirección de HTTP a HTTPS
-                        channel
-                                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-                                .requiresSecure()
-                )
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(authEntryPointJwt)
-                );
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
+      throws Exception {
+    return authConfig.getAuthenticationManager();
+  }
 
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-        return http.build();
-    }
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    // configuration.setAllowedOrigins(Arrays.asList("https://styleswype.shop/" ,
+    // "https://www.styleswype.shop/")); // Ajusta según sea necesario
+    configuration.setAllowedOrigins(Arrays.asList("*"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(
+        Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+    configuration.setAllowCredentials(false);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/api/auth/admin/**")
+                    .hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("/api/auth/user/**")
+                    .hasAuthority("ROLE_USER")
+                    .requestMatchers("/api/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .authenticationProvider(
+            authenticationProvider()) // Configura tu proveedor de autenticación personalizado
+        .addFilterBefore(
+            authenticationJwtTokenFilter(),
+            UsernamePasswordAuthenticationFilter.class) // Agrega tu filtro JWT personalizado
+        .requiresChannel(
+            channel -> // Configura la redirección de HTTP a HTTPS
+            channel.requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null).requiresSecure())
+        .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt));
+
+    return http.build();
+  }
 }

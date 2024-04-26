@@ -1,4 +1,4 @@
-package com.project.ShoppingAppBackend.Repositories;
+package com.project.ShoppingAppBackend.repositories;
 
 import com.project.ShoppingAppBackend.models.Role;
 import com.project.ShoppingAppBackend.models.RoleName;
@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Optional<Role> findByName(RoleName roleName);
+  Optional<Role> findByName(RoleName roleName);
 }
