@@ -14,4 +14,11 @@ public class ProductCategoryWithSubCategoryResponse {
   private String description;
   private String categoryImage;
   private List<ProductSubCategoryResponse> subCategories;
+
+  public ProductCategoryWithSubCategoryResponse(
+      Long id, String name, List<ProductSubCategoryResponse> subCategories) {
+    this.id = id;
+    this.name = name;
+    this.subCategories = subCategories;
+  }
 }

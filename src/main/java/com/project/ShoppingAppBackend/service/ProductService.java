@@ -71,12 +71,14 @@ public class ProductService {
 
   private void addProductImages(Product product, List<ProductImageRequest> imageRequests)
       throws IOException {
+    System.out.println("Agregando imágenes al producto con id: {}" + product.getId());
     String folderName =
         "Shopping/product/" + product.getName().trim().replace(" ", "_").toLowerCase();
 
     for (ProductImageRequest imageRequest : imageRequests) {
-      String resizedImage =
-          imageService.resizeImageBase64(imageRequest.getImageUrl(), 1080, 1080, "jpg");
+      System.out.println("\"Procesando imagen: {}" + imageRequest.getName());
+      String resizedImage = imageService.resizeImageBase64(imageRequest.getImageUrl(), 1080, 1080);
+
       String imageUrl = imageService.uploadImage(resizedImage, folderName);
 
       ProductImage productImage = new ProductImage();
@@ -85,9 +87,9 @@ public class ProductService {
       productImage.setOrder_index(imageRequest.getOrderIndex());
       productImage.setType(imageRequest.getType());
       productImage.setProduct(product);
-      // product.getImages().add(productImage);
+      product.getImages().add(productImage);
       productImageRepository.save(productImage);
-      product.addImage(productImage);
+      // product.addImage(productImage);
     }
   }
 
@@ -113,16 +115,7 @@ public class ProductService {
             .map(
                 variant ->
                     new ProductVariantResponse(
-                        variant.getId(),
-                        variant.getSize().getLabel(),
-                        variant
-                            .getSize()
-                            .getClothingSize()
-                            .name(), // Asegúrate de manejar nulls aquí
-                        variant.getSize().getShoeSize() != null
-                            ? variant.getSize().getShoeSize().name()
-                            : null,
-                        variant.getStock()))
+                        variant.getId(), variant.getSize().getLabel(), variant.getStock()))
             .collect(Collectors.toList());
 
     return new ProductResponse(

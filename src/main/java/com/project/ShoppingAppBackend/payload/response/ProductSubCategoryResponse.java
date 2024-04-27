@@ -21,5 +21,11 @@ public class ProductSubCategoryResponse {
     this.description = description;
     this.subCategoryImage = subCategoryImage;
   }
+
+  public ProductSubCategoryResponse(Long id, String name) {
+    this.id = id;
+    this.name = name;
+  }
+
   // Getters y setters
 }

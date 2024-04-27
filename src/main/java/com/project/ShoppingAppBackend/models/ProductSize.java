@@ -21,11 +21,5 @@ public class ProductSize {
   @Enumerated(EnumType.STRING)
   private SizeType sizeType;
 
-  @Enumerated(EnumType.STRING)
-  private ClothingSize clothingSize;
-
-  @Enumerated(EnumType.STRING)
-  private ShoeSize shoeSize;
-
   // Getters y Setters...
 }

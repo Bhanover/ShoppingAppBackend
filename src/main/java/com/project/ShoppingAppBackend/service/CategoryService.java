@@ -4,9 +4,7 @@ import com.project.ShoppingAppBackend.models.ProductCategory;
 import com.project.ShoppingAppBackend.models.ProductSubCategory;
 import com.project.ShoppingAppBackend.payload.request.ProductCategoryRequest;
 import com.project.ShoppingAppBackend.payload.request.ProductSubCategoryRequest;
-import com.project.ShoppingAppBackend.payload.response.ProductCategoryResponse;
-import com.project.ShoppingAppBackend.payload.response.ProductCategoryWithSubCategoryResponse;
-import com.project.ShoppingAppBackend.payload.response.ProductSubCategoryResponse;
+import com.project.ShoppingAppBackend.payload.response.*;
 import com.project.ShoppingAppBackend.repositories.ProductCategoryRepository;
 import com.project.ShoppingAppBackend.repositories.ProductRepository;
 import com.project.ShoppingAppBackend.repositories.ProductSubCategoryRepository;
@@ -84,30 +82,42 @@ public class CategoryService {
     return productSubCategoryRepository.save(subCategory);
   }
 
-  /*
-
-
-  public Category updateCategory(String id, CategoryRequest categoryRequest) {
-    Category category =
-        categoryRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Category not found"));
-    category.setName(categoryRequest.getName());
-    category.setDescription(categoryRequest.getDescription());
-
-    // Actualiza la URL de la imagen solo si hay una nueva imagen
-    if (categoryRequest.getImageUrl() != null) {
-      category.setImageUrl(categoryRequest.getImageUrl());
-    }
-
-    return categoryRepository.save(category);
+  public SimpleCategoryResponse convertToCategoryWithSubCategoryNameResponse(
+      ProductCategory productCategory) {
+    List<SimpleSubCategoryResponse> subCategoryResponses =
+        productCategory.getSubCategories().stream()
+            .map(
+                subCategory ->
+                    new SimpleSubCategoryResponse(subCategory.getId(), subCategory.getName()))
+            .collect(Collectors.toList());
+    return new SimpleCategoryResponse(
+        productCategory.getId(), productCategory.getName(), subCategoryResponses);
   }
-
-  public void deleteCategory(String id) {
-    Category category =
-        categoryRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Category not found"));
-    categoryRepository.delete(category);
-  }*/
 }
+
+ /*
+
+
+ public Category updateCategory(String id, CategoryRequest categoryRequest) {
+   Category category =
+       categoryRepository
+           .findById(id)
+           .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+   category.setName(categoryRequest.getName());
+   category.setDescription(categoryRequest.getDescription());
+
+   // Actualiza la URL de la imagen solo si hay una nueva imagen
+   if (categoryRequest.getImageUrl() != null) {
+     category.setImageUrl(categoryRequest.getImageUrl());
+   }
+
+   return categoryRepository.save(category);
+ }
+
+ public void deleteCategory(String id) {
+   Category category =
+       categoryRepository
+           .findById(id)
+           .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+   categoryRepository.delete(category);
+ }*/

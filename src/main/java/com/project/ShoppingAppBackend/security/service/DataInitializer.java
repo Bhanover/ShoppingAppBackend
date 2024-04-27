@@ -24,17 +24,8 @@ public class DataInitializer implements CommandLineRunner {
   @Override
   @Transactional
   public void run(String... args) {
-    if (userRepository.findByUsername("alison").isEmpty()) {
-      Role adminRole =
-          roleRepository
-              .findByName(RoleName.ROLE_ADMIN)
-              .orElseGet(() -> roleRepository.save(new Role(RoleName.ROLE_ADMIN)));
-      User admin = new User();
-      admin.setUsername("alison");
-      admin.setPassword(passwordEncoder.encode("alisonmijaelvaleriA.1"));
-      admin.setRoles(Collections.singleton(adminRole));
-      userRepository.save(admin);
-    }
+    createRoleIfNotFound(RoleName.ROLE_ADMIN);
+    createUserIfNotFound("alison", "alisonmijaelvaleriA.1", RoleName.ROLE_ADMIN);
   }
 
   @PostConstruct
@@ -43,35 +34,56 @@ public class DataInitializer implements CommandLineRunner {
     initShoeSizes();
   }
 
+  private void createUserIfNotFound(String username, String password, RoleName roleName) {
+    userRepository
+        .findByUsername(username)
+        .orElseGet(
+            () -> {
+              Role adminRole =
+                  roleRepository
+                      .findByName(roleName)
+                      .orElseThrow(() -> new IllegalStateException("Role must exist"));
+              User user = new User();
+              user.setUsername(username);
+              user.setPassword(passwordEncoder.encode(password));
+              user.setRoles(Collections.singleton(adminRole));
+              return userRepository.save(user);
+            });
+  }
+
+  private void createRoleIfNotFound(RoleName roleName) {
+    roleRepository
+        .findByName(roleName)
+        .orElseGet(
+            () -> {
+              Role role = new Role(roleName);
+              return roleRepository.save(role);
+            });
+  }
+
   private void initClothingSizes() {
-    for (ClothingSize size : ClothingSize.values()) {
-      String label = size.name();
-      productSizeRepository
-          .findByLabel(label)
-          .orElseGet(
-              () -> {
-                ProductSize newSize = new ProductSize();
-                newSize.setLabel(label);
-                newSize.setSizeType(SizeType.CLOTHING);
-                newSize.setClothingSize(size);
-                return productSizeRepository.save(newSize);
-              });
+    String[] clothingSizes = {"XS", "S", "M", "L", "XL"};
+    for (String size : clothingSizes) {
+      createSizeIfNotFound(size, SizeType.CLOTHING);
     }
   }
 
   private void initShoeSizes() {
-    for (ShoeSize size : ShoeSize.values()) {
-      String label = size.name();
-      productSizeRepository
-          .findByLabel(label)
-          .orElseGet(
-              () -> {
-                ProductSize newSize = new ProductSize();
-                newSize.setLabel(label);
-                newSize.setSizeType(SizeType.SHOES);
-                newSize.setShoeSize(size);
-                return productSizeRepository.save(newSize);
-              });
+    int[] shoeSizes = {35, 36, 37, 38, 39, 40, 41, 42};
+    for (int size : shoeSizes) {
+      createSizeIfNotFound(String.valueOf(size), SizeType.SHOES);
     }
+  }
+
+  private void createSizeIfNotFound(String label, SizeType sizeType) {
+    productSizeRepository
+        .findByLabel(label)
+        .orElseGet(
+            () -> {
+              ProductSize newSize = new ProductSize();
+              newSize.setLabel(label);
+              newSize.setSizeType(sizeType);
+              return productSizeRepository.save(newSize);
+            });
   }
 }

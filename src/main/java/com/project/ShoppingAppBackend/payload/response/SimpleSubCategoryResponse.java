@@ -1,16 +1,13 @@
 package com.project.ShoppingAppBackend.payload.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductVariantResponse {
+public class SimpleSubCategoryResponse {
   private Long id;
-  private String sizeLabel;
-  private Integer stock;
+  private String name;
 }

@@ -31,23 +31,24 @@ public class ImageService {
     return outputStream.toByteArray();
   }
 
-  public String resizeImageBase64(String base64Image, int width, int height, String outputFormat)
-      throws IOException {
-    byte[] imageBytes = Base64.getDecoder().decode(base64Image.split(",")[1]);
+  public String resizeImageBase64(String base64Image, int width, int height) throws IOException {
+    // Separar la parte de datos del formato
+    String[] parts = base64Image.split(",");
+    String imageDataBytes = parts[1];
+    String imageType =
+        parts[0].split("/")[1].split(";")[0]; // Obtiene el tipo de la imagen (png, jpg, etc.)
 
+    byte[] imageBytes = Base64.getDecoder().decode(imageDataBytes);
     ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
     BufferedImage originalImage = ImageIO.read(inputStream);
 
     BufferedImage resizedImage = Thumbnails.of(originalImage).size(width, height).asBufferedImage();
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    ImageIO.write(resizedImage, outputFormat, outputStream);
+    ImageIO.write(resizedImage, imageType, outputStream);
     byte[] outputBytes = outputStream.toByteArray();
 
-    return "data:image/"
-        + outputFormat
-        + ";base64,"
-        + Base64.getEncoder().encodeToString(outputBytes);
+    return "data:image/" + imageType + ";base64," + Base64.getEncoder().encodeToString(outputBytes);
   }
 
   public String uploadImage(String base64Image, String folderName) throws IOException {

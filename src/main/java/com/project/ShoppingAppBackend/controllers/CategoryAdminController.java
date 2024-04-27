@@ -7,6 +7,7 @@ import com.project.ShoppingAppBackend.payload.request.ProductSubCategoryRequest;
 import com.project.ShoppingAppBackend.payload.response.ProductCategoryResponse;
 import com.project.ShoppingAppBackend.payload.response.ProductCategoryWithSubCategoryResponse;
 import com.project.ShoppingAppBackend.payload.response.ProductSubCategoryResponse;
+import com.project.ShoppingAppBackend.payload.response.SimpleCategoryResponse;
 import com.project.ShoppingAppBackend.repositories.ProductCategoryRepository;
 import com.project.ShoppingAppBackend.repositories.ProductSubCategoryRepository;
 import com.project.ShoppingAppBackend.service.CategoryService;
@@ -41,7 +42,6 @@ public class CategoryAdminController {
       @RequestParam("file") MultipartFile file) {
     try {
       byte[] resizedImage = imageService.resizeImage(file, 1080, 1080);
-      // Pasar el nombre de la categoría al método uploadCategoryImageNew
       String categoryImage =
           fileService.uploadCategoryImage(resizedImage, file.getOriginalFilename(), name);
 
@@ -135,5 +135,13 @@ public class CategoryAdminController {
       throw new EntityNotFoundException("Category not found");
     }
     productSubCategoryRepository.delete(productSubCategory);
+  }
+
+  @GetMapping("/name-categories")
+  public List<SimpleCategoryResponse> getAllCategoriesWithSubcategoriesNames() {
+    List<ProductCategory> categories = productCategoryRepository.findAllWithSubCategories();
+    return categories.stream()
+        .map(categoryService::convertToCategoryWithSubCategoryNameResponse)
+        .collect(Collectors.toList());
   }
 }

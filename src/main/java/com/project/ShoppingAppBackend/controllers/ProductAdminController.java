@@ -33,7 +33,7 @@ public class ProductAdminController {
   // @CacheEvict(value = "clothingCache", allEntries = true)
   @Transactional
   @PostMapping("/product")
-  public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+  public ResponseEntity<?> addProduct(@RequestBody ProductRequest productRequest) {
     try {
       Long productId = productService.createProductWithImages(productRequest);
       Product product =
