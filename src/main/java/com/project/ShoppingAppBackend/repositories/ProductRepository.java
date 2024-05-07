@@ -6,20 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-  /*
-  @Query(
-      "SELECT c FROM ClothingItem c JOIN FETCH c.images i WHERE i.position = 'principal' AND i.isAssociated = true")
-  List<Product> findAllWithMainAssociatedImages();
+  @Query("SELECT p FROM Product p JOIN FETCH p.images WHERE p.subCategory.id = :subCategoryId")
+  List<Product> findAllBySubCategoryId(Long subCategoryId);
 
-  @EntityGraph(value = "clothingItem-graph", type = EntityGraph.EntityGraphType.LOAD)
-  Page<Product> findByCategories_Id(String categoryId, Pageable pageable);
-
-  @EntityGraph(value = "clothingItem-graph", type = EntityGraph.EntityGraphType.LOAD)
-  Page<Product> findAll(Pageable pageable);*/
+  List<Product> findAllByCategoryId(Long categoryId);
 }

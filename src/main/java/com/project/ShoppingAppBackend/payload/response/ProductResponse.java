@@ -14,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse {
+  private Long id;
+
   @NotBlank(message = "El nombre del producto es obligatorio")
   private String name;
 

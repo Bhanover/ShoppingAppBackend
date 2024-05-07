@@ -4,9 +4,7 @@ import com.project.ShoppingAppBackend.models.*;
 import com.project.ShoppingAppBackend.payload.request.ProductImageRequest;
 import com.project.ShoppingAppBackend.payload.request.ProductRequest;
 import com.project.ShoppingAppBackend.payload.request.ProductVariantRequest;
-import com.project.ShoppingAppBackend.payload.response.ProductImageResponse;
-import com.project.ShoppingAppBackend.payload.response.ProductResponse;
-import com.project.ShoppingAppBackend.payload.response.ProductVariantResponse;
+import com.project.ShoppingAppBackend.payload.response.*;
 import com.project.ShoppingAppBackend.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +117,7 @@ public class ProductService {
             .collect(Collectors.toList());
 
     return new ProductResponse(
+        product.getId(),
         product.getName(),
         product.getType(),
         product.getPrice(),
@@ -128,10 +127,60 @@ public class ProductService {
             .map(
                 img ->
                     new ProductImageResponse(
-                        img.getName(), img.getImageUrl(), img.getOrder_index(), img.getType()))
+                        img.getId(),
+                        img.getName(),
+                        img.getImageUrl(),
+                        img.getOrder_index(),
+                        img.getType()))
             .collect(Collectors.toList()),
         product.getCategory() != null ? product.getCategory().getId() : null,
         product.getSubCategory() != null ? product.getSubCategory().getId() : null,
+        variantResponses);
+  }
+
+  /*
+  public ProductStoreResponse convertProductStoreResponse(Product product) {
+    List<ProductImageStoreResponse> imageResponses =
+        product.getImages().stream()
+            .map(
+                img ->
+                    new ProductImageStoreResponse(
+                        img.getImageUrl(), img.getOrder_index(), img.getType()))
+            .collect(Collectors.toList());
+
+    return new ProductStoreResponse(product.getName(), product.getPrice(), imageResponses);
+  }*/
+  public ProductStoreResponse convertProductStoreResponse(Product product) {
+    String mainImageUrl =
+        product.getImages().stream()
+            .filter(img -> "main".equals(img.getType()))
+            .map(ProductImage::getImageUrl)
+            .findFirst()
+            .orElse(null);
+
+    String secondaryImageUrl =
+        product.getImages().stream()
+            .filter(img -> "secondary".equals(img.getType()))
+            .map(ProductImage::getImageUrl)
+            .findFirst()
+            .orElse(null);
+    List<ProductVariantResponse> variantResponses =
+        product.getVariants().stream()
+            .map(
+                variant ->
+                    new ProductVariantResponse(
+                        variant.getId(), variant.getSize().getLabel(), variant.getStock()))
+            .collect(Collectors.toList());
+    return new ProductStoreResponse(
+        product.getId(),
+        product.getName(),
+        product.getPrice(),
+        mainImageUrl,
+        secondaryImageUrl,
+        product.getCategory() != null ? product.getCategory().getId() : null,
+        product.getSubCategory() != null ? product.getSubCategory().getId() : null,
+        product.getCategory().getName(),
+        product.getSubCategory().getName(),
         variantResponses);
   }
 }

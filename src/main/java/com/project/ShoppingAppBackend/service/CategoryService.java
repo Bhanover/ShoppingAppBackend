@@ -48,6 +48,29 @@ public class CategoryService {
             : "Sin categoría");
   }
 
+  public ProductSubCategoryStoreResponse convertToSubCategoryStoreResponse(
+      ProductSubCategory productSubCategory) {
+    Long categoryId = null;
+    String categoryName = "Sin categoría";
+    String categoryImage = null;
+
+    // Comprobamos si la categoría asociada no es nula antes de acceder a sus propiedades
+    if (productSubCategory.getCategory() != null) {
+      categoryId = productSubCategory.getCategory().getId();
+      categoryName = productSubCategory.getCategory().getName();
+      categoryImage = productSubCategory.getCategory().getCategoryImage();
+    }
+
+    return new ProductSubCategoryStoreResponse(
+        productSubCategory.getId(),
+        productSubCategory.getName(),
+        productSubCategory.getDescription(),
+        productSubCategory.getSubCategoryImage(),
+        categoryId,
+        categoryName,
+        categoryImage);
+  }
+
   public ProductCategoryWithSubCategoryResponse convertToCategoryWithSubCategoryResponse(
       ProductCategory productCategory) {
     List<ProductSubCategoryResponse> subCategoryResponses =
@@ -93,31 +116,10 @@ public class CategoryService {
     return new SimpleCategoryResponse(
         productCategory.getId(), productCategory.getName(), subCategoryResponses);
   }
+
+  public SimpleNameCategoryResponse convertToCategorySimpleNameResponse(
+      ProductCategory productCategory) {
+
+    return new SimpleNameCategoryResponse(productCategory.getId(), productCategory.getName());
+  }
 }
-
- /*
-
-
- public Category updateCategory(String id, CategoryRequest categoryRequest) {
-   Category category =
-       categoryRepository
-           .findById(id)
-           .orElseThrow(() -> new EntityNotFoundException("Category not found"));
-   category.setName(categoryRequest.getName());
-   category.setDescription(categoryRequest.getDescription());
-
-   // Actualiza la URL de la imagen solo si hay una nueva imagen
-   if (categoryRequest.getImageUrl() != null) {
-     category.setImageUrl(categoryRequest.getImageUrl());
-   }
-
-   return categoryRepository.save(category);
- }
-
- public void deleteCategory(String id) {
-   Category category =
-       categoryRepository
-           .findById(id)
-           .orElseThrow(() -> new EntityNotFoundException("Category not found"));
-   categoryRepository.delete(category);
- }*/
