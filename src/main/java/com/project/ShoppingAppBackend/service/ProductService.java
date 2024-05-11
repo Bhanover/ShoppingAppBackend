@@ -138,6 +138,10 @@ public class ProductService {
         variantResponses);
   }
 
+  public ProductNameAndIdResponse convertProductNameAndIdResponse(Product product) {
+    return new ProductNameAndIdResponse(product.getId(), product.getName());
+  }
+
   /*
   public ProductStoreResponse convertProductStoreResponse(Product product) {
     List<ProductImageStoreResponse> imageResponses =

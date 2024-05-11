@@ -1,5 +1,7 @@
 package com.project.ShoppingAppBackend.controllers;
 
+import com.project.ShoppingAppBackend.models.User;
+import com.project.ShoppingAppBackend.payload.request.SignupRequest;
 import com.project.ShoppingAppBackend.repositories.UserRepository;
 import com.project.ShoppingAppBackend.payload.request.LoginRequest;
 import com.project.ShoppingAppBackend.payload.response.JwtResponse;
@@ -7,8 +9,10 @@ import com.project.ShoppingAppBackend.security.jwt.AuthTokenFilter;
 import com.project.ShoppingAppBackend.security.jwt.JwtUtils;
 import com.project.ShoppingAppBackend.security.service.TokenBlacklistService;
 import com.project.ShoppingAppBackend.security.service.UserDetailsImpl;
+import com.project.ShoppingAppBackend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class UserController {
   @Autowired private AuthenticationManager authenticationManager;
   @Autowired private UserRepository userRepository;
@@ -32,6 +36,7 @@ public class UserController {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private TokenBlacklistService tokenBlacklistService;
   @Autowired private AuthTokenFilter authTokenFilter;
+  @Autowired private UserService userService;
 
   @PostMapping("/session")
   public ResponseEntity<?> authenticateUserSession(@Valid @RequestBody LoginRequest loginRequest) {
@@ -52,7 +57,7 @@ public class UserController {
   }
 
   /*Este método maneja las solicitudes de cierre de sesión de los usuarios.*/
-  @DeleteMapping("/signout")
+  @DeleteMapping("/session")
   public ResponseEntity<?> logoutUser(HttpServletRequest request) {
     String jwt = authTokenFilter.parseJwt(request);
     if (jwt != null) {
@@ -60,6 +65,17 @@ public class UserController {
       return ResponseEntity.ok("Log out successful!");
     } else {
       throw new RuntimeException("No se pudo obtener el token del usuario autenticado");
+    }
+  }
+
+  @Transactional
+  @PostMapping("/register")
+  public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
+    try {
+      User user = userService.registerUser(signUpRequest);
+      return ResponseEntity.ok("User registered successfully!");
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body("Error: " + e.getMessage());
     }
   }
 }

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth/admin")
 public class CategoryAdminController {
   @Autowired private ImageService imageService;
   @Autowired private FileService fileService;

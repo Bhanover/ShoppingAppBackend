@@ -25,7 +25,8 @@ public class DataInitializer implements CommandLineRunner {
   @Transactional
   public void run(String... args) {
     createRoleIfNotFound(RoleName.ROLE_ADMIN);
-    createUserIfNotFound("alison", "alisonmijaelvaleriA.1", RoleName.ROLE_ADMIN);
+    createRoleIfNotFound(RoleName.ROLE_USER);
+    createUserIfNotFound("admin", "balto123", RoleName.ROLE_ADMIN);
   }
 
   @PostConstruct

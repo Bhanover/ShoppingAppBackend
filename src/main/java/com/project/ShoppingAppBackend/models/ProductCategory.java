@@ -12,33 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/*
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "itemCategory")
-public class ItemCategory {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private String id;
-
-  private String name;
-  private String description;
-
-  // Relación con ClothingItem
-  private String imageCategory;
-
-  @ManyToMany(mappedBy = "categories")
-  @JsonIgnore
-  private Set<ClothingItem> clothingItems = new HashSet<>();
-
-  // Constructores, Getters y Setters
-
-}
-*/
 @Getter
 @Setter
 @AllArgsConstructor

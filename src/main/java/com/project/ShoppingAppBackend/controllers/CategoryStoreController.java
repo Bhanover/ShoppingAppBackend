@@ -2,6 +2,7 @@ package com.project.ShoppingAppBackend.controllers;
 
 import com.project.ShoppingAppBackend.models.ProductCategory;
 import com.project.ShoppingAppBackend.models.ProductSubCategory;
+import com.project.ShoppingAppBackend.payload.response.ProductCategoryResponse;
 import com.project.ShoppingAppBackend.payload.response.ProductSubCategoryStoreResponse;
 import com.project.ShoppingAppBackend.payload.response.SimpleCategoryResponse;
 import com.project.ShoppingAppBackend.payload.response.SimpleNameCategoryResponse;
@@ -59,7 +60,6 @@ public class CategoryStoreController {
                   .getCategoryImage() // Usamos la misma imagen para mantener la coherencia
               );
 
-      // Agrega "Ver todo" al inicio de la lista de respuestas
       subCategoryResponses.add(0, allItemsOption);
     }
 
@@ -72,5 +72,15 @@ public class CategoryStoreController {
     return categories.stream()
         .map(categoryService::convertToCategorySimpleNameResponse)
         .collect(Collectors.toList());
+  }
+
+  @GetMapping("/simple-categories-home")
+  public ResponseEntity<List<ProductCategoryResponse>> getSimpleCategoriesHome() {
+    List<ProductCategory> categories = productCategoryRepository.findAll();
+    List<ProductCategoryResponse> categoryResponses =
+        categories.stream()
+            .map(categoryService::convertToCategoryResponse)
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(categoryResponses);
   }
 }

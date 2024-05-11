@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth/admin")
 public class SizeAdminController {
 
   @Autowired private ProductSizeRepository sizeRepository;
