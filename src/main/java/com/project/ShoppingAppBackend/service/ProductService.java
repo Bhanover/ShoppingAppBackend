@@ -69,7 +69,6 @@ public class ProductService {
 
   private void addProductImages(Product product, List<ProductImageRequest> imageRequests)
       throws IOException {
-    System.out.println("Agregando imágenes al producto con id: {}" + product.getId());
     String folderName =
         "Shopping/product/" + product.getName().trim().replace(" ", "_").toLowerCase();
 

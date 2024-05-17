@@ -44,20 +44,19 @@ public class CategoryStoreController {
             .collect(Collectors.toList());
 
     if (!subCategoryResponses.isEmpty()) {
-      // Utiliza la categoría de la primera subcategoría como representante para la opción "Ver
-      // todo"
+
       ProductSubCategoryStoreResponse firstSubCategory = subCategoryResponses.get(0);
 
       ProductSubCategoryStoreResponse allItemsOption =
           new ProductSubCategoryStoreResponse(
-              0L, // ID especial para 'Ver todo'
+              0L,
               "Ver todo",
               "Muestra todos los productos de esta categoría",
-              firstSubCategory.getCategoryImage(), // Imagen de la categoría principal
-              firstSubCategory.getCategoryId(), // ID de la categoría principal
-              firstSubCategory.getCategoryName(), // Nombre de la categoría principal
+              firstSubCategory.getCategoryImage(),
+              firstSubCategory.getCategoryId(),
+              firstSubCategory.getCategoryName(),
               firstSubCategory
-                  .getCategoryImage() // Usamos la misma imagen para mantener la coherencia
+                  .getCategoryImage()
               );
 
       subCategoryResponses.add(0, allItemsOption);

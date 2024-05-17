@@ -29,7 +29,7 @@ public class ProductStoreController {
   @Autowired ProductImageRepository productImageRepository;
 
   @Transactional
-  @GetMapping("/products/{id}")
+    @GetMapping("/products/{id}")
   public ResponseEntity<?> getProduct(@PathVariable Long id) {
     try {
       Product product =
