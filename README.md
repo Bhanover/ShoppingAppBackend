@@ -19,9 +19,44 @@
 
 
 
+## Índice
+
+- [Descripción](#descripción)
+- [Video del Proyecto](#video-del-proyecto)
+- [Características Principales](#características-principales)
+  - [Para Usuarios](#para-usuarios)
+  - [Para Administradores](#para-administradores)
+  - [Adaptabilidad y Seguridad](#adaptabilidad-y-seguridad)
+- [Bibliotecas y Dependencias](#bibliotecas-y-dependencias)
+  - [Servidor (usando Spring Boot)](#servidor-usando-spring-boot)
+- [Requisitos del Sistema](#requisitos-del-sistema)
+- [Configuración de la Base de Datos](#configuración-de-la-base-de-datos)
+  - [Configuración de la Base de Datos para Importar un Archivo .sql](#configuración-de-la-base-de-datos-para-importar-un-archivo-sql)
+- [Cómo Empezar](#cómo-empezar)
+  - [Servidor (Spring Boot)](#servidor-spring-boot)
+- [Guía de Uso Detallada](#guía-de-uso-detallada)
+  - [Para Usuarios](#para-usuarios-1)
+    - [Navegación y Exploración de Productos](#navegación-y-exploración-de-productos)
+    - [Registro e Inicio de Sesión](#registro-e-inicio-de-sesión)
+    - [Carrito de Compras](#carrito-de-compras)
+    - [Página de Contacto](#página-de-contacto)
+  - [Para Administradores](#para-administradores-1)
+    - [Gestión de Productos](#gestión-de-productos)
+    - [Gestión de Categorías y Subcategorías](#gestión-de-categorías-y-subcategorías)
+    - [Panel de Administración](#panel-de-administración)
+  - [Adaptabilidad y Seguridad](#adaptabilidad-y-seguridad-1)
+- [Información Importante](#información-importante)
+- [Cómo Contribuir](#cómo-contribuir)
+- [Contacto](#contacto)
+- [Licencia](#licencia)
+
 ## Descripción
-Store es una página enfocada en la venta de ropa. Se busca proporcionar una experiencia de compra segura, eficiente y visualmente atractiva, permitiendo a los usuarios explorar y
-adquirir productos desde cualquier dispositivo
+Store es una página enfocada en la venta de ropa. Se busca proporcionar una experiencia de compra segura, eficiente y visualmente atractiva, permitiendo a los usuarios explorar y adquirir productos desde cualquier dispositivo.
+
+## Video del Proyecto
+Aquí puedes ver un video demostrativo del proyecto:
+
+[![Video del Proyecto](https://img.youtube.com/vi/haPTJ8KhQ7k/0.jpg)](https://www.youtube.com/watch?v=haPTJ8KhQ7k)
 
 ## Características Principales
 
@@ -97,7 +132,7 @@ server.port=8081
 Una ves creado en Mysql el usuario "root" con password "1234" no olvides de crear la base de datos con el comando `create database ShoppingAppDB`;
 
 
-### (Opcional)Configuración de la base de datos para importar un archivo .sql
+### Configuración de la base de datos para importar un archivo .sql
 
 Para importar una base de datos a MySQL Workbench, puedes seguir los siguientes pasos:
 
