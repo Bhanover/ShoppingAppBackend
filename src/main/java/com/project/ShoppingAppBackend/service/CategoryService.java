@@ -20,6 +20,7 @@ public class CategoryService {
   @Autowired private ProductCategoryRepository productCategoryRepository;
   @Autowired private ProductSubCategoryRepository productSubCategoryRepository;
 
+  // Agregar una nueva categoría
   public ProductCategory addCategory(ProductCategoryRequest productCategoryRequest) {
     ProductCategory productCategory = new ProductCategory();
     productCategory.setName(productCategoryRequest.getName());
@@ -28,6 +29,7 @@ public class CategoryService {
     return productCategoryRepository.save(productCategory);
   }
 
+  // Convertir una categoría a su respuesta
   public ProductCategoryResponse convertToCategoryResponse(ProductCategory productCategory) {
     return new ProductCategoryResponse(
         productCategory.getId(),
@@ -36,6 +38,7 @@ public class CategoryService {
         productCategory.getCategoryImage());
   }
 
+  // Convertir una subcategoría a su respuesta
   public ProductSubCategoryResponse convertToSubCategoryResponse(
       ProductSubCategory productSubCategory) {
     return new ProductSubCategoryResponse(
@@ -48,6 +51,7 @@ public class CategoryService {
             : "Sin categoría");
   }
 
+  // Convertir una subcategoría a su respuesta para la tienda
   public ProductSubCategoryStoreResponse convertToSubCategoryStoreResponse(
       ProductSubCategory productSubCategory) {
     Long categoryId = null;
@@ -71,6 +75,7 @@ public class CategoryService {
         categoryImage);
   }
 
+  // Convertir una categoría a su respuesta con subcategorías
   public ProductCategoryWithSubCategoryResponse convertToCategoryWithSubCategoryResponse(
       ProductCategory productCategory) {
     List<ProductSubCategoryResponse> subCategoryResponses =
@@ -92,6 +97,7 @@ public class CategoryService {
         subCategoryResponses);
   }
 
+  // Agregar una nueva subcategoría
   public ProductSubCategory addSubCategory(ProductSubCategoryRequest request) {
     ProductSubCategory subCategory = new ProductSubCategory();
     subCategory.setName(request.getName());
@@ -105,6 +111,7 @@ public class CategoryService {
     return productSubCategoryRepository.save(subCategory);
   }
 
+  // Convertir una categoría a respuesta con nombres de subcategorías
   public SimpleCategoryResponse convertToCategoryWithSubCategoryNameResponse(
       ProductCategory productCategory) {
     List<SimpleSubCategoryResponse> subCategoryResponses =
@@ -117,6 +124,7 @@ public class CategoryService {
         productCategory.getId(), productCategory.getName(), subCategoryResponses);
   }
 
+  // Convertir una categoría a respuesta con su nombre
   public SimpleNameCategoryResponse convertToCategorySimpleNameResponse(
       ProductCategory productCategory) {
 

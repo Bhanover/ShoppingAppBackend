@@ -31,6 +31,7 @@ public class CategoryStoreController {
   @Autowired private ProductCategoryRepository productCategoryRepository;
   @Autowired private ProductSubCategoryRepository productSubCategoryRepository;
 
+  // Obtener subcategorías por ID de categoría
   @Transactional
   @GetMapping("/categories/{categoryId}/subcategories")
   public ResponseEntity<List<ProductSubCategoryStoreResponse>> getSubCategoriesByCategoryId(
@@ -55,9 +56,7 @@ public class CategoryStoreController {
               firstSubCategory.getCategoryImage(),
               firstSubCategory.getCategoryId(),
               firstSubCategory.getCategoryName(),
-              firstSubCategory
-                  .getCategoryImage()
-              );
+              firstSubCategory.getCategoryImage());
 
       subCategoryResponses.add(0, allItemsOption);
     }
@@ -65,6 +64,7 @@ public class CategoryStoreController {
     return ResponseEntity.ok(subCategoryResponses);
   }
 
+  // Obtener categorías con nombres de subcategorías
   @GetMapping("/simple-name-categories")
   public List<SimpleNameCategoryResponse> getAllCategoriesWithSubcategoriesNames() {
     List<ProductCategory> categories = productCategoryRepository.findAll();
@@ -73,6 +73,7 @@ public class CategoryStoreController {
         .collect(Collectors.toList());
   }
 
+  // Obtener categorías simples para la página de inicio
   @GetMapping("/simple-categories-home")
   public ResponseEntity<List<ProductCategoryResponse>> getSimpleCategoriesHome() {
     List<ProductCategory> categories = productCategoryRepository.findAll();

@@ -17,70 +17,56 @@ import java.util.Map;
 
 @Component
 public class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-    @Value("${billy.app.jwtSecret}")
-    private String jwtSecret;
+  private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${billy.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+  @Value("${billy.app.jwtSecret}")
+  private String jwtSecret;
 
-    public String getUsernameFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+  @Value("${billy.app.jwtExpirationMs}")
+  private int jwtExpirationMs;
+
+  public String getUsernameFromToken(String token) {
+    return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+  }
+
+  public boolean validateToken(String token) throws InvalidJwtException {
+    try {
+      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+      if (isTokenExpired(token)) {
+        throw new InvalidJwtException("El token ha expirado");
+      }
+      return true;
+    } catch (ExpiredJwtException e) {
+      throw new InvalidJwtException("El token ha expirado");
+    } catch (JwtException e) {
+      throw new InvalidJwtException("Token de autenticación no válido");
     }
-    public boolean validateToken(String token) throws InvalidJwtException {
-        try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
-            if (isTokenExpired(token)) {
-                throw new InvalidJwtException("El token ha expirado");
-            }
-            return true;
-        } catch (ExpiredJwtException e) {
-            throw new InvalidJwtException("El token ha expirado");
-        } catch (JwtException e) {
-            throw new InvalidJwtException("Token de autenticación no válido");
-        }
-    }
+  }
 
+  private boolean isTokenExpired(String token) {
+    final Date expiration = getExpirationDateFromToken(token);
+    return expiration.before(Date.from(Instant.now()));
+  }
 
+  private Date getExpirationDateFromToken(String token) {
+    return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getExpiration();
+  }
 
-    private boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(Date.from(Instant.now()));
-    }
+  public String generateTokenFromUsername(String username) {
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
+    System.out.println("jwtExpirationMs: " + jwtExpirationMs);
+    System.out.println("Expiration Time: " + expiryDate);
 
-    private Date getExpirationDateFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
-    }
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("sub", username);
+    claims.put("iat", now);
+    claims.put("exp", expiryDate);
 
-    public String generateTokenFromUsername(String username) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
+    String token =
+        Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
 
-        // Confirmar valores    System.out.println("Current Time: " + now);
-        System.out.println("jwtExpirationMs: " + jwtExpirationMs);
-        System.out.println("Expiration Time: " + expiryDate);
-
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", username);
-        claims.put("iat", now);
-        claims.put("exp", expiryDate);
-
-        String token = Jwts.builder()
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
-
-        return token;
-    }
-
-
+    return token;
+  }
 }

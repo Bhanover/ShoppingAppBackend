@@ -20,6 +20,7 @@ import java.util.Map;
 public class ImageService {
   @Autowired Cloudinary cloudinary;
 
+  // Redimensionar imagen de un archivo MultipartFile
   public byte[] resizeImage(MultipartFile file, int width, int height) throws IOException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -31,12 +32,12 @@ public class ImageService {
     return outputStream.toByteArray();
   }
 
+  // Redimensionar imagen codificada en base64
   public String resizeImageBase64(String base64Image, int width, int height) throws IOException {
 
     String[] parts = base64Image.split(",");
     String imageDataBytes = parts[1];
-    String imageType =
-        parts[0].split("/")[1].split(";")[0];
+    String imageType = parts[0].split("/")[1].split(";")[0];
 
     byte[] imageBytes = Base64.getDecoder().decode(imageDataBytes);
     ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
@@ -51,6 +52,7 @@ public class ImageService {
     return "data:image/" + imageType + ";base64," + Base64.getEncoder().encodeToString(outputBytes);
   }
 
+  // Subir imagen a Cloudinary
   public String uploadImage(String base64Image, String folderName) throws IOException {
     Map uploadResult =
         cloudinary
@@ -59,4 +61,3 @@ public class ImageService {
     return uploadResult.get("url").toString();
   }
 }
-

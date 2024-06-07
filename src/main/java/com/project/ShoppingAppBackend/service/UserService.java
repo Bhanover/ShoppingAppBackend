@@ -21,6 +21,7 @@ public class UserService {
 
   @Autowired private PasswordEncoder encoder;
 
+  // Registrar un nuevo usuario
   public User registerUser(SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       throw new RuntimeException("Error: Username is already taken!");

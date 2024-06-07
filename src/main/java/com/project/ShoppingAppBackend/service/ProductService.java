@@ -28,6 +28,7 @@ public class ProductService {
   @Autowired ProductSizeRepository productSizeRepository;
   @Autowired ProductVariantRepository productVariantRepository;
 
+  // Agregar un nuevo producto
   private Product addProduct(ProductRequest productRequest) {
     Product product = new Product();
     product.setName(productRequest.getName());
@@ -49,6 +50,7 @@ public class ProductService {
     return productRepository.save(product);
   }
 
+  // Crear un producto con imágenes
   public Long createProductWithImages(ProductRequest productRequest) {
     try {
       Product product = addProduct(productRequest);
@@ -67,6 +69,7 @@ public class ProductService {
     }
   }
 
+  // Agregar imágenes al producto
   private void addProductImages(Product product, List<ProductImageRequest> imageRequests)
       throws IOException {
     String folderName =
@@ -90,6 +93,7 @@ public class ProductService {
     }
   }
 
+  // Agregar variantes al producto
   private void addProductVariants(Product product, List<ProductVariantRequest> variantRequests) {
     for (ProductVariantRequest variantRequest : variantRequests) {
       ProductSize size =
@@ -106,6 +110,7 @@ public class ProductService {
     }
   }
 
+  // Convertir producto a respuesta para el cliente
   public ProductResponse convertProductResponse(Product product) {
     List<ProductVariantResponse> variantResponses =
         product.getVariants().stream()
@@ -137,6 +142,7 @@ public class ProductService {
         variantResponses);
   }
 
+  // Convertir producto a respuesta con nombre e ID
   public ProductNameAndIdResponse convertProductNameAndIdResponse(Product product) {
     return new ProductNameAndIdResponse(product.getId(), product.getName());
   }
@@ -153,6 +159,7 @@ public class ProductService {
 
     return new ProductStoreResponse(product.getName(), product.getPrice(), imageResponses);
   }*/
+  // Convertir producto a respuesta para la tienda
   public ProductStoreResponse convertProductStoreResponse(Product product) {
     String mainImageUrl =
         product.getImages().stream()

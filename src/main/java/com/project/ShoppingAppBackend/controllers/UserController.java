@@ -38,6 +38,7 @@ public class UserController {
   @Autowired private AuthTokenFilter authTokenFilter;
   @Autowired private UserService userService;
 
+  // Autenticar usuario y crear sesión
   @PostMapping("/session")
   public ResponseEntity<?> authenticateUserSession(@Valid @RequestBody LoginRequest loginRequest) {
     Authentication authentication =
@@ -68,6 +69,7 @@ public class UserController {
     }
   }
 
+  // Registrar un nuevo usuario
   @Transactional
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {

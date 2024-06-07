@@ -28,8 +28,9 @@ public class ProductStoreController {
   @Autowired ProductRepository productRepository;
   @Autowired ProductImageRepository productImageRepository;
 
+  // Obtener un producto por ID
   @Transactional
-    @GetMapping("/products/{id}")
+  @GetMapping("/products/{id}")
   public ResponseEntity<?> getProduct(@PathVariable Long id) {
     try {
       Product product =
@@ -50,6 +51,7 @@ public class ProductStoreController {
     }
   }
 
+  // Obtener productos por ID de subcategoría
   @Transactional
   @GetMapping("/subcategories/{subCategoryId}/products")
   public ResponseEntity<?> getProductsBySubCategoryId(@PathVariable Long subCategoryId) {
@@ -68,6 +70,7 @@ public class ProductStoreController {
     }
   }
 
+  // Obtener todos los productos
   @Transactional
   @GetMapping("/products")
   public ResponseEntity<List<ProductStoreResponse>> getAllProducts() {
@@ -84,6 +87,7 @@ public class ProductStoreController {
     }
   }
 
+  // Obtener productos por ID de categoría
   @Transactional
   @GetMapping("/categories/{categoryId}/products")
   public ResponseEntity<List<ProductStoreResponse>> getProductsByCategoryId(

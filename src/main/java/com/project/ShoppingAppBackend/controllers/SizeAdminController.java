@@ -15,6 +15,7 @@ public class SizeAdminController {
 
   @Autowired private ProductSizeRepository sizeRepository;
 
+  // Obtener todas las tallas
   @GetMapping("/sizes")
   public List<ProductSize> getAllSizes() {
     return sizeRepository.findAll();

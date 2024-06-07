@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
 
   @Autowired private EmailService emailService;
-
   private static final Logger logger = LoggerFactory.getLogger(EmailController.class);
 
+  // Enviar un email desde el formulario de contacto
   @PostMapping("/contact")
   public ResponseEntity<?> sendEmail(
       @RequestParam String nombre,
@@ -33,13 +33,19 @@ public class EmailController {
       @RequestParam @NotBlank String tema,
       @RequestParam @NotBlank String mensaje) {
     try {
+      // Formatear el contenido del email
       String content =
           String.format(
               "Nombre: %s\nApellidos: %s\nTeléfono: %s\nEmail: %s\nMercado: %s\nAsunto: %s\nTema: %s\nMensaje: %s",
               nombre, apellidos, telefono, email, mercado, asunto, tema, mensaje);
+
+      // Enviar el email
       emailService.sendEmail("bil@styleswype.shop", "Nuevo Mensaje de Contacto", content);
+
+      // Responder con éxito
       return ResponseEntity.ok("Mensaje enviado");
     } catch (Exception e) {
+      // Registrar el error y responder con un error interno del servidor
       logger.error("Error al procesar el formulario de contacto: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
           .body("Error al enviar mensaje");

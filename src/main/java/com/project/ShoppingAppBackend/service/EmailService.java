@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 public class EmailService {
 
   @Autowired private JavaMailSender mailSender;
-
   private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
+  // Enviar un correo electrónico
   public void sendEmail(String to, String subject, String content) {
     try {
       SimpleMailMessage message = new SimpleMailMessage();

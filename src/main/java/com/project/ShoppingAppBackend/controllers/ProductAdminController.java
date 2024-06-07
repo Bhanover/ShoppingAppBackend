@@ -32,6 +32,7 @@ public class ProductAdminController {
   @Autowired ProductRepository productRepository;
   @Autowired ProductImageRepository productImageRepository;
 
+  // Agregar un nuevo producto
   // @CacheEvict(value = "clothingCache", allEntries = true)
   @Transactional
   @PostMapping("/product")
@@ -57,6 +58,7 @@ public class ProductAdminController {
     }
   }
 
+  // Obtener un producto por ID
   @Transactional
   @GetMapping("/product/{id}")
   public ResponseEntity<?> getProduct(@PathVariable Long id) {
@@ -79,6 +81,7 @@ public class ProductAdminController {
     }
   }
 
+  // Obtener nombres e IDs de todos los productos
   @GetMapping("/name-id-product")
   public ResponseEntity<List<ProductNameAndIdResponse>> getAllProductNameAndId() {
     try {
@@ -94,6 +97,7 @@ public class ProductAdminController {
     }
   }
 
+  // Eliminar un producto por ID
   @DeleteMapping("/product/{id}")
   public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
     try {

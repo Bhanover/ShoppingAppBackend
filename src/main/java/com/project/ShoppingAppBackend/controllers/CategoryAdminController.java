@@ -34,6 +34,7 @@ public class CategoryAdminController {
   @Autowired private ProductCategoryRepository productCategoryRepository;
   @Autowired private ProductSubCategoryRepository productSubCategoryRepository;
 
+  // Agregar una nueva categoría
   @PostMapping("/categories")
   // @CacheEvict(value = "categoriesCache", allEntries = true)
   public ResponseEntity<?> addCategory(
@@ -58,6 +59,7 @@ public class CategoryAdminController {
     }
   }
 
+  // Agregar una nueva subcategoría
   @PostMapping("/subcategories")
   public ResponseEntity<?> addSubCategory(
       @RequestParam("name") String name,
@@ -83,6 +85,7 @@ public class CategoryAdminController {
     }
   }
 
+  // Obtener todas las categorías con sus subcategorías
   @GetMapping("/categories")
   public ResponseEntity<List<ProductCategoryWithSubCategoryResponse>> getAllCategories() {
     List<ProductCategory> categories = productCategoryRepository.findAllWithSubCategories();
@@ -94,6 +97,7 @@ public class CategoryAdminController {
     return ResponseEntity.ok(categoryResponses);
   }
 
+  // Obtener categorías simples
   @GetMapping("/simple-categories")
   public ResponseEntity<List<ProductCategoryResponse>> getSimpleCategories() {
     List<ProductCategory> categories = productCategoryRepository.findAll();
@@ -104,6 +108,7 @@ public class CategoryAdminController {
     return ResponseEntity.ok(categoryResponses);
   }
 
+  // Obtener todas las subcategorías
   @GetMapping("/subcategories")
   public ResponseEntity<List<ProductSubCategoryResponse>> getAllSubCategories() {
     List<ProductSubCategory> subCategories = productSubCategoryRepository.findAllWithCategoryName();
@@ -115,6 +120,7 @@ public class CategoryAdminController {
     return ResponseEntity.ok(subCategoryResponses);
   }
 
+  // Eliminar una categoría
   @DeleteMapping("/categories/{id}")
   // @CacheEvict(value = "categoriesCache", allEntries = true)
   // @Transactional
@@ -126,6 +132,7 @@ public class CategoryAdminController {
     productCategoryRepository.delete(productCategory);
   }
 
+  // Eliminar una subcategoría
   @DeleteMapping("/subcategories/{id}")
   // @CacheEvict(value = "categoriesCache", allEntries = true)
   // @Transactional
@@ -137,6 +144,7 @@ public class CategoryAdminController {
     productSubCategoryRepository.delete(productSubCategory);
   }
 
+  // Obtener categorías con nombres de subcategorías
   @GetMapping("/name-categories")
   public List<SimpleCategoryResponse> getAllCategoriesWithSubcategoriesNames() {
     List<ProductCategory> categories = productCategoryRepository.findAllWithSubCategories();

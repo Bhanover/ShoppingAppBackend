@@ -35,6 +35,7 @@ public class FileService {
   @Autowired private ProductCategoryRepository productCategoryRepository;
   @Autowired private ImageService imageService;
 
+  // Subir imagen de categoría
   public String uploadCategoryImage(byte[] resizedImage, String fileName, String categoryName)
       throws IOException {
     String originalFileName = StringUtils.cleanPath(fileName);
@@ -54,6 +55,7 @@ public class FileService {
     return (String) uploadResult.get("url");
   }
 
+  // Subir imágenes de productos
   public void uploadProductImages(MultipartFile[] files, Long productId) throws IOException {
     Product product =
         productRepository
